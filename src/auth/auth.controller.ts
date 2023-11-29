@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, ParseIntPipe, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 // import { Request } from 'express';
 import { AuthDto } from './dto/auth.dto';
@@ -10,14 +10,18 @@ export class AuthController {
   // The AuthService instance is injected into the AuthController constructor.
   // path on server is /auth/signup
   @Post('signup')
-  signup(/*@Req() req: Request*/ @Body() dto: AuthDto) {
+  signup(
+    /*@Req() req: Request*/ @Body('email') email: string,
+    @Body('password', ParseIntPipe) password: string,
+    @Body() dto: AuthDto
+  ) {
     console.log({ dto });
-    return this.authService.signup();
+    return this.authService.signup(dto);
   }
 
   // path on server is /auth/login
   @Post('login')
-  login() {
-    return this.authService.login();
+  login(@Body() dto: AuthDto) {
+    return this.authService.login(dto);
   }
 }
